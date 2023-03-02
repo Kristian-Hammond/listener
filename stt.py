@@ -171,6 +171,8 @@ def listen_print_loop(responses, stream, start_pos, f):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
+    url = "http://api.the-singularity-show.com/api/append/"
+    header = {"Content-Type": "application/json"}
 
     for response in responses:
         f.seek(start_pos)
@@ -220,6 +222,9 @@ def listen_print_loop(responses, stream, start_pos, f):
 
             # new line break and reset the start pos for the stream
             f.write(f"{transcript}\n")
+            
+            data = {"content": f"{transcript}\n", "file": location}
+            requests.post(url, headers=header, json=data)
             start_pos = f.tell()
 
 
